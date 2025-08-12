@@ -2,5 +2,16 @@
 name = "dorian"
 version = "0.1.0"
 edition = "2024"
+authors = ["Alex Watson <alex@coded.cc>"]
+description = "A game development project, for fun"
+repository = "https://github.com/alexwatever/dorian"
+readme = "README.md"
 
 [dependencies]
+
+[lints.rust]
+unsafe_code = "forbid"
+unused-features = "warn"
+unused_crate_dependencies = "warn"
+unused_extern_crates = "warn"
+unstable_features = "warn"
