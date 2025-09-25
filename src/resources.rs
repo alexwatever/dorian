@@ -1,31 +1,49 @@
 use bevy::prelude::*;
 
-/// Game state resource (for future use)
-#[derive(Resource, Default)]
-pub struct GameState {
-    pub score: u32,
-    pub level: u32,
+/// App state
+#[derive(States, Debug, Clone, Eq, PartialEq, Hash, Default)]
+pub enum AppState {
+    #[default]
+    Menu,
+    InGame,
 }
 
-/// Game settings resource (for future use)
+/// Pause state
+#[derive(States, Debug, Clone, Eq, PartialEq, Hash, Default)]
+pub enum PauseState {
+    #[default]
+    Running,
+    Paused,
+}
+
+/// Game state
+#[derive(Resource, Default)]
+pub struct GameState {
+    _score: u32,
+    _level: u32,
+}
+
+/// Game time
+#[derive(Resource, Default)]
+pub struct GameTime(pub f32);
+
+impl GameTime {
+    /// Getter for the current game time
+    pub fn get(&self) -> f32 {
+        self.0
+    }
+}
+
+/// Game settings
 #[derive(Resource)]
 pub struct GameSettings {
-    pub master_volume: f32,
-    pub difficulty: Difficulty,
+    _master_volume: f32,
 }
 
 impl Default for GameSettings {
     fn default() -> Self {
         Self {
-            master_volume: 1.0,
-            difficulty: Difficulty::Normal,
+            _master_volume: 1.0,
         }
     }
 }
-
-#[derive(Debug, Clone, Copy)]
-pub enum Difficulty {
-    Easy,
-    Normal,
-    Hard,
-} 

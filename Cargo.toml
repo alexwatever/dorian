@@ -8,11 +8,16 @@ repository = "https://github.com/alexwatever/dorian"
 readme = "README.md"
 
 [dependencies]
-bevy = "0.15"
+bevy = "0.15.0"
+chrono = { version = "0.4.42", features = ["serde"] }
+parse-display = "0.10.0"
+uuid = { version = "1.18.1", features = ["v4", "serde"] }
+
+[dev-dependencies]
 
 # Uncomment this to get faster compile times during development
-# [features]
-# dev = ["bevy/dynamic_linking"]
+[features]
+dev = ["bevy/dynamic_linking"]
 
 [profile.dev.package."*"]
 # Enable optimizations for dependencies in debug builds

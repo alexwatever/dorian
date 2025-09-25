@@ -2,7 +2,7 @@
 
 ## 🎮 About
 
-Dorian is a small starter project A game development project built with [Bevy](https://bevyengine.org/). It's a work in progress.  
+Dorian is a small game development project built with [Bevy](https://bevyengine.org/). It's a work in progress.  
 
 ## 📁 Project Structure
 
@@ -11,15 +11,23 @@ The project follows Bevy's ECS architecture:
 ```
 dorian/
 ├── assets/ # Game assets
-│ ├── sprites/ # Sprite images
 │ ├── audio/ # Sound effects and music
-│ └── fonts/ # Fonts
+│ ├── fonts/ # Fonts
+│ └── sprites/ # Sprite images
 ├── src/
 │ ├── main.rs # App entry point (adds DefaultPlugins + GamePlugin)
-│ ├── lib.rs # Defines GamePlugin and registers systems
-│ ├── components.rs # ECS components (Player, Velocity, etc.)
-│ ├── systems.rs # Systems (setup, movement, simple animation)
-│ └── resources.rs # Future shared resources (game state/settings)
+│ ├── lib.rs # Defines and registers the game plugin and its systems
+│ ├── error.rs # Error types
+│ ├── resources.rs # Future shared resources (game state/settings)
+│ ├── components/ # ECS components
+│ │ ├── button.rs # Button component
+│ │ ├── menu.rs # Menu component
+│ │ └── player.rs # Player component
+│ └── systems/ # Systems
+│   ├── camera.rs # Camera system
+│   ├── menu.rs # Menu system
+│   ├── player.rs # Player system
+│   └── time.rs # Time system
 └── Cargo.toml # Dependencies and config
 ```
 
@@ -27,10 +35,10 @@ dorian/
 
 - `Cargo.toml`: Bevy 0.15, dev profile optimization  
 - `src/main.rs`: Starts Bevy and adds plugins  
-- `src/lib.rs`: `GamePlugin` wiring for startup/update systems  
-- `src/components.rs`: `Player`, `Velocity`, etc.  
-- `src/systems.rs`: camera + player setup, movement, simple color animation, etc.  
-- `src/resources.rs`: scaffold for future shared state  
+- `src/lib.rs`: Setup for the game plugin and its systems  
+- `src/resources.rs`: Scaffold for shared state  
+- `src/components/`: Player, Menu, etc.  
+- `src/systems/`: Camera, player setup, movement, simple color animation, etc.  
 
 ## 🚀 Run
 
@@ -45,12 +53,12 @@ cargo run
 ## ⌨️ Controls
 
 - Move: WASD or Arrow Keys
-- Exit: Close the window or Ctrl+C in the terminal
+- Exit: ESC to access the in-game menu, close the window, or Ctrl+C in the terminal
 
-## 🗺️ Roadmap
+## 🗺️ Roadmap (WIP)
 
-- Sprites and textures
+- Game states (menu/playing/game over)
 - Basic collisions
 - Obstacles / interactions
 - Simple SFX/music
-- Game states (menu/playing/game over)
+- Sprites and textures
