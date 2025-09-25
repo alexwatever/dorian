@@ -1,3 +1,4 @@
+#![allow(unused_crate_dependencies)]
 use bevy::prelude::*;
 use dorian::GamePlugin;
 

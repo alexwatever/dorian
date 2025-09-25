@@ -28,21 +28,6 @@ impl Menu for StartMenu {
     type MenuButton = StartMenuButton;
     type State = AppState;
 
-    /// Setup the main menu
-    fn setup(mut commands: Commands, mut selection: ResMut<MenuSelection>) {
-        // Set the selection to the start button
-        selection.set_index(0);
-
-        // Spawn the menu node
-        let mut menu: Entity = Self::spawn_menu(&mut commands, StartMenu);
-
-        // Spawn the start button
-        Self::spawn_button(&mut commands, &mut menu, StartMenuButton::Start);
-
-        // Spawn the quit button
-        Self::spawn_button(&mut commands, &mut menu, StartMenuButton::Quit);
-    }
-
     /// Handle keyboard input for the main menu
     fn keyboard_input(
         keyboard_input: Res<ButtonInput<KeyCode>>,
@@ -53,12 +38,12 @@ impl Menu for StartMenu {
         match keyboard_input.get_pressed().next() {
             // Move up
             Some(KeyCode::KeyW) | Some(KeyCode::ArrowUp) => {
-                let index = selection.index().saturating_sub(1);
+                let index: usize = selection.index().saturating_sub(1);
                 selection.set_index(index);
             }
             // Move down
             Some(KeyCode::KeyS) | Some(KeyCode::ArrowDown) => {
-                let index = (selection.index() + 1).min(1);
+                let index: usize = (selection.index() + 1).min(1);
                 selection.set_index(index);
             }
             // Select
@@ -98,7 +83,7 @@ impl Menu for StartMenu {
             match *interaction {
                 Interaction::Pressed => match button {
                     // Start game
-                    StartMenuButton::Start => next_state.set(Self::State::InGame),
+                    StartMenuButton::Start => next_state.set(AppState::InGame),
                     // Quit game
                     StartMenuButton::Quit => {
                         let _event_id = exit.send(AppExit::Success);
@@ -119,21 +104,6 @@ impl Menu for IngameMenu {
     type MenuButton = IngameMenuButton;
     type State = PauseState;
 
-    /// Setup the in-game menu
-    fn setup(mut commands: Commands, mut selection: ResMut<MenuSelection>) {
-        // Set the selection to the resume button
-        selection.set_index(0);
-
-        // Spawn the menu node
-        let mut menu: Entity = Self::spawn_menu(&mut commands, IngameMenu);
-
-        // Spawn the resume button
-        Self::spawn_button(&mut commands, &mut menu, IngameMenuButton::Resume);
-
-        // Spawn the quit button
-        Self::spawn_button(&mut commands, &mut menu, IngameMenuButton::Quit);
-    }
-
     /// Handle keyboard input for the in-game menu
     fn keyboard_input(
         keys: Res<ButtonInput<KeyCode>>,
@@ -144,20 +114,23 @@ impl Menu for IngameMenu {
         match keys.get_pressed().next() {
             // Move up
             Some(KeyCode::KeyW) | Some(KeyCode::ArrowUp) => {
-                let index = selection.index().saturating_sub(1);
+                let index: usize = selection.index().saturating_sub(1);
                 selection.set_index(index);
             }
             // Move down
             Some(KeyCode::KeyS) | Some(KeyCode::ArrowDown) => {
-                let index = (selection.index() + 1).min(1);
+                let index: usize = (selection.index() + 1).min(1);
                 selection.set_index(index);
             }
             // Select
             Some(KeyCode::Enter) | Some(KeyCode::NumpadEnter) => {
+                // Determine the selected button
                 selection
                     .try_into()
                     .map(|selected_button| match selected_button {
+                        // Resume game
                         IngameMenuButton::Resume => next_pause.set(PauseState::Running),
+                        // Quit game
                         IngameMenuButton::Quit => {
                             let _event_id = exit.send(AppExit::Success);
                         }

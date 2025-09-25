@@ -16,6 +16,11 @@ pub enum StartMenuButton {
     Quit,
 }
 
+impl StartMenuButton {
+    /// Start menu button values
+    const VALUES: [Self; 2] = [Self::Start, Self::Quit];
+}
+
 impl TryFrom<ResMut<'_, MenuSelection>> for StartMenuButton {
     type Error = Error;
 
@@ -44,6 +49,11 @@ pub enum IngameMenuButton {
     Resume,
     #[display("Quit")]
     Quit,
+}
+
+impl IngameMenuButton {
+    /// Start menu button values
+    const VALUES: [Self; 2] = [Self::Resume, Self::Quit];
 }
 
 impl TryFrom<ResMut<'_, MenuSelection>> for IngameMenuButton {
@@ -90,5 +100,27 @@ impl ButtonIndex for IngameMenuButton {
             IngameMenuButton::Resume => 0,
             IngameMenuButton::Quit => 1,
         }
+    }
+}
+
+/// Trait for button values
+pub trait ButtonValues {
+    /// Get the values for a button
+    fn values() -> Vec<Self>
+    where
+        Self: Sized;
+}
+
+impl ButtonValues for StartMenuButton {
+    /// Get the values for a start menu button
+    fn values() -> Vec<Self> {
+        Self::VALUES.to_vec()
+    }
+}
+
+impl ButtonValues for IngameMenuButton {
+    /// Get the values for a in-game menu button
+    fn values() -> Vec<Self> {
+        Self::VALUES.to_vec()
     }
 }

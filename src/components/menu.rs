@@ -1,7 +1,7 @@
 use bevy::{prelude::*, state::state::FreelyMutableState};
 
 // Modules
-use crate::components::button::ButtonIndex;
+use crate::components::button::{ButtonIndex, ButtonValues};
 
 /// Current selection index for keyboard nav (0/1)
 #[derive(Resource, Default, Debug)]
@@ -20,17 +20,17 @@ impl MenuSelection {
 }
 
 /// Start menu
-#[derive(Component, Debug)]
+#[derive(Component, Debug, Default)]
 pub struct StartMenu;
 
 /// Pause menu
-#[derive(Component, Debug)]
+#[derive(Component, Debug, Default)]
 pub struct IngameMenu;
 
 /// Trait for menu components
 pub trait Menu {
-    type MenuEntity: Component;
-    type MenuButton: Component + ButtonIndex + std::fmt::Display + Clone;
+    type MenuEntity: Component + Default;
+    type MenuButton: Component + ButtonIndex + ButtonValues + std::fmt::Display + Clone;
     type State: States;
 
     /// Button colours
@@ -38,7 +38,18 @@ pub trait Menu {
     const BUTTON_SELECTED_COLOUR: Color = Color::srgb(0.30, 0.30, 0.45);
 
     /// Setup the menu
-    fn setup(commands: Commands, selection: ResMut<MenuSelection>);
+    fn setup(mut commands: Commands, mut selection: ResMut<MenuSelection>) {
+        // Set the selection to the first button
+        selection.set_index(0);
+
+        // Spawn the menu node
+        let mut menu: Entity = Self::spawn_menu(&mut commands);
+
+        // Spawn the buttons
+        for button in <Self as Menu>::MenuButton::values() {
+            Self::spawn_button(&mut commands, &mut menu, button);
+        }
+    }
 
     /// Cleanup the menu
     fn cleanup(mut commands: Commands, nodes: Query<Entity, With<Self::MenuEntity>>) {
@@ -49,7 +60,7 @@ pub trait Menu {
     }
 
     /// Spawn a menu node
-    fn spawn_menu(commands: &mut Commands, menu_type: Self::MenuEntity) -> Entity {
+    fn spawn_menu(commands: &mut Commands) -> Entity {
         // Menu attributes
         const MENU_WIDTH: Val = Val::Percent(100.0);
         const MENU_HEIGHT: Val = Val::Percent(100.0);
@@ -59,7 +70,7 @@ pub trait Menu {
 
         commands
             .spawn((
-                menu_type,
+                <Self as Menu>::MenuEntity::default(),
                 Node {
                     width: MENU_WIDTH,
                     height: MENU_HEIGHT,
